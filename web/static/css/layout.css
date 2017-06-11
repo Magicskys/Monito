@@ -1,0 +1,22 @@
+body {
+       padding-top: 60px;
+       padding-bottom: 40px;
+     }
+   .nav li {
+   padding-top: 5px;
+   }
+
+   .sidebar-nav {
+       padding: 9px 0;
+     }
+
+
+.list-group{
+  width: 150px;
+}
+
+.nav .nav-header {
+font-size: 18px;
+color:#FF9900;
+}
+

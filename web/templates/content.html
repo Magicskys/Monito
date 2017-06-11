@@ -1,0 +1,49 @@
+{% extends 'nav.html' %}
+{% load static %}
+
+
+{% block content %}
+<button type="button" class="btn btn-info btn-lg" id="button">
+    按钮
+</button>
+
+<button type="button" class="btn btn-info btn-lg" id="button2">
+    i/o按钮
+</button>
+<div>
+<p>
+   <h2>CPU个数:{{form.cpu}}</h2><h2>物理CPU个数:{{form.logical_cpu}}</h2>
+</p>
+<p>
+    <h2>当前登录用户数量:{{form.len_user}}</h2>
+</p>
+<p>
+    <h2>开机时间:{{form.open_date}}</h2>
+</p>
+<p>
+    <h2>当前网卡数量:{{form.len_net}}</h2>
+</p>
+</div>
+<div class="row clearfix">
+  <div class="col-md-3 column">
+     <canvas id="cpu_paint" width="200" height="250"></canvas>
+      <em>CPU</em>
+  </div>
+  <div class="col-md-3 column">
+    <canvas id="memory_paint" width="200" height="250"></canvas>
+      <em>内存</em>
+  </div>
+  <div class="col-md-3 column">
+    <canvas id="io_paint" width="200" height="250"></canvas>
+      <em>磁盘IO</em>
+  </div>
+  <div class="col-md-3 column">
+    <canvas id="net_paint" width="200" height="250"></canvas>
+      <em>网络</em>
+  </div>
+</div>
+
+<script src="{% static '/js/echarts.simple.min.js' %}" type="text/javascript"></script>
+<script src="{% static '/js/info.js' %}" type="text/javascript"></script>
+
+{% endblock %}
