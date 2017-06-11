@@ -41,8 +41,11 @@ def log_in(request):
 
 
 def log_out(request):
-    logout(request)
-    return HttpResponse("退出")
+    if request.user.is_authenticated():
+        logout(request)
+        return HttpResponse("成功退出")
+    else:
+        return HttpResponseRedirect("/login/")
 
 
 def test(request):
