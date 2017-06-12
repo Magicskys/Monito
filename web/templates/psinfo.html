@@ -1,0 +1,49 @@
+{% extends 'nav.html' %} {% load static %} {% block content %}
+<button type="button" class="btn btn-info btn-lg" id="button">
+    刷新
+</button>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <td>状态</td>
+      <td>用户</td>
+      <td>PID</td>
+      <td>程序名称</td>
+      <td>绝对地址</td>
+    </tr>
+  </thead>
+  <tbody id="psinfo">
+    {% for ps in psinfo %}
+    <tr>
+      <td>{{ps.status}}</td>
+      <td>{{ps.username}}</td>
+      <td>{{ps.pid}}</td>
+      <td>{{ps.name}}</td>
+      <td>{{ps.exe}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<script type="text/javascript">
+  $(function() {
+    $("#button").click(function() {
+      $.ajax({
+        url: '/psinfo/',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          json=eval('('+data+')');
+          $("#psinfo").html('');
+          for (var i=0;i<json.length-1;i++){
+            $('#psinfo').append('<tr">'+'<td>'+json[i].status+'</td>'+'<td>'+json[i].username+'</td>'+'<td>'+json[i].pid+'</td>'+'<td>'+json[i].name+'</td>'+'<td>'+json[i].exe+'</td>'+'</tr>')
+          }
+        }
+      })
+    });
+  })
+</script>
+
+{% endblock %}

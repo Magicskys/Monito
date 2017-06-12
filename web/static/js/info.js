@@ -9,7 +9,7 @@ var myChart3 = echarts.init(dom_io);
 var myChart4 = echarts.init(dom_net);
 
 // var oneDay = 24 * 3600 * 1000;
-var date = [];
+var ylabel=[];
 var data = [];
 // function addData(shift) {
   // var now = new Date();
@@ -25,12 +25,12 @@ var data = [];
 
 option = {
   // legend: {
-    // data: ['/O']
+    // data: "data"
   // },
   xAxis: {
     type: 'category',
-    boundaryGap: false,
-    data: date
+    // boundaryGap: false,
+    data: ylabel
   },
   yAxis: {
     boundaryGap: [0, '50%'],
@@ -51,10 +51,15 @@ option = {
 
 if (option && typeof option === "object") {
   myChart.setOption(option, true);
+  // myChart.setOption({xAxis: {data:["CPU"]}});
   myChart2.setOption(option, true);
+  // myChart2.setOption({xAxis: {data:["MEMORY"]}});
   myChart3.setOption(option, true);
+  // myChart3.setOption({xAxis: {data:["CPU"]}});
   myChart4.setOption(option, true);
-}
+  // myChart4.setOption({xAxis: {data:["CPU"]}})
+};
+
 
 $(function() {
   $("#button").click(function(event) {
@@ -62,9 +67,6 @@ $(function() {
       url: 'test2/',
       type: 'GET',
       dataType: 'json',
-      data: {
-        param1: 'value1'
-      },
       success: function(data) {
         // data=data.replace(/\(/g,"").replace(/\)/g,"").split(",");
         // data.pop();
@@ -95,9 +97,6 @@ function dick_io() {
     url: 'test2/',
     type: 'GET',
     dataType: 'json',
-    data: {
-      param1: 'value1'
-    },
     success: function(data) {
       var json=eval('('+data+')');
       cpu=[],memory=[]

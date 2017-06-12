@@ -1,0 +1,47 @@
+{% extends 'nav.html' %} {% load static %} {% block content %}
+<button type="button" class="btn btn-info btn-lg" id="button">
+    刷新
+</button>
+
+<div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>用户</th>
+        <th>终端</th>
+        <th>地址</th>
+        <th>登录时长</th>
+      </tr>
+    </thead>
+    <tbody id="userinfo">
+      {% for user in userinfo %}
+      <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.terminal }}</td>
+        <td>{{ user.host }}</td>
+        <td>{{ user.started }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    $('#button').click(function() {
+      $.ajax({
+        url: '/userinfo/',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          $('#userinfo').html('');
+          for (var i = 0; i <= data.length - 1; i++) {
+            $('#userinfo').append('<tr>' + '<td>' + data[i][0] + '</td>' + '<td>' + data[i][1] + '</td>' + '<td>' + data[i][2] + '</td>' + '<td>' + data[i][3] + '</td>' + '</tr>');
+          }
+        }
+      })
+    });
+  })
+</script>
+
+{% endblock %}

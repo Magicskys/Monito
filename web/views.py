@@ -5,18 +5,46 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
 from django.contrib.auth import login,logout,authenticate
 from forms import LoginForm
-import psutil
+import psutil,json
 from django.core import serializers
 from models import Dashboad
 import datetime
 # Create your views here.
 
-
-
 def index(request):
     if request.user.is_authenticated():
         form={'cpu':psutil.cpu_count(),'logical_cpu':psutil.cpu_count(logical=False),'len_user':len(psutil.users()),'open_date':datetime.datetime.fromtimestamp(psutil.boot_time ()).strftime("%Y-%m-%d %H: %M: %S"),'len_net':len(psutil.net_io_counters(pernic=True))}
         return render(request,'content.html',{'form':form})
+    else:
+        return HttpResponseRedirect('/login')
+
+def userinfo(request):
+    if request.user.is_authenticated():
+        if request.is_ajax():
+            userinfo=[i for i in psutil.users()]
+            return JsonResponse(data=userinfo,safe=False,content_type="application/json")
+        else:
+            userinfo=psutil.users()
+            return render(request,'userinfo.html',{'userinfo':userinfo})
+    else:
+        return HttpResponseRedirect('/login')
+
+def psinfo(request):
+    if request.user.is_authenticated():
+        if request.is_ajax():
+            # psinfo = [i for i in psutil.process_iter()]
+            psinfo = [i.as_dict(attrs=['status', 'username', 'pid', 'name', 'exe']) for i in psutil.process_iter()]
+            # return HttpResponse(json.dumps(userinfo))
+            return JsonResponse(data=json.dumps(psinfo),safe=False,content_type='application/json')
+        else:
+            psinfo=[i for i in psutil.process_iter()]
+            return render(request,'psinfo.html',{'psinfo':psinfo})
+    else:
+        return HttpResponseRedirect('/login')
+
+def netinfo(request):
+    if request.user.is_authenticated():
+        return render(request,'netinfo.html')
     else:
         return HttpResponseRedirect('/login')
 
@@ -47,13 +75,10 @@ def log_out(request):
     else:
         return HttpResponseRedirect("/login/")
 
-
 def test(request):
-    data=Dashboad.objects.order_by("-id").values_list("id")[0][0]
-    Dashboad.objects.filter(id__lt=data-100).delete()
-    return HttpResponse("ok")
+    userinfo =[i.as_dict(attrs=['status','username','pid','name','exe']) for i in psutil.process_iter()]
+    return HttpResponse(json.dumps(userinfo))
     # return JsonResponse(data=data,safe=False,content_type="application/json")
-
 
 def test2(request):
     if request.is_ajax():
@@ -66,8 +91,7 @@ def test2(request):
             Dashboad.objects.filter(id__lt=endid - 100).delete()
         # data=Dashboad.objects.all().values_list("memory")
         data=serializers.serialize("json",Dashboad.objects.all(),fields=['cpu','memory'],use_natural_foreign_keys=True, use_natural_primary_keys=True)
-
         # return HttpResponse(data)
         return JsonResponse(data=data,safe=False,content_type="application/json")
     else:
-        return HttpResponse("error")
+        return HttpResponse("")
