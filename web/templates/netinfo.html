@@ -4,18 +4,98 @@
 
 {% block content %}
 <button type="button" class="btn btn-info btn-lg" id="button">
-    按钮
+    刷新
 </button>
 
-<button type="button" class="btn btn-info btn-lg" id="button2">
-    i/o按钮
-</button>
 <div class="row clearfix">
-    <span class="col-md-offset-0 column label label-primary" style="font-size:13px">CPU个数:{{form.cpu}}</span>
-    <span class="col-md-offset-1 column label label-primary" style="font-size:13px">物理CPU个数:{{form.logical_cpu}}</span>
-    <span class="col-md-offset-1 column label label-primary" style="font-size:13px">当前登录用户数量:{{form.len_user}}</span>
-    <span class="col-md-offset-1 column label label-primary" style="font-size:13px">当前网卡数量:{{form.len_net}}</span>
-    <span class="col-md-offset-1 column label label-primary" style="font-size:13px">开机时间:{{form.open_date}}</span>
+    <span class="col-md-offset-0 column label label-primary" style="font-size:13px" id="netinfo_len">当前网卡数量:{{netinfo_len}}</span>
+    <span class="col-md-offset-1 column label label-primary" style="font-size:13px" id="netinfo_ps_len">当前网络连接数量:{{netinfo_two_len}}</span>
 </div>
+
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <td>网卡</td>
+    <td>发送的字节数</td>
+    <td>接受的字节数</td>
+    <td>发送数据包</td>
+    <td>接受的数据包</td>
+  </tr>
+  </thead>
+  <tbody id="netinfo">
+    {% for key,value in netinfo.items %}
+    <tr>
+      <td>{{key}}</td>
+      <td>{{value.0}}</td>
+      <td>{{value.1}}</td>
+      <td>{{value.2}}</td>
+      <td>{{value.3}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <td>fb</td>
+    <td>PID</td>
+    <td>状态</td>
+    <td>本地地址</td>
+    <td>本地端口号</td>
+    <td>目的地址</td>
+    <td>目的端口</td>
+    <td>类型</td>
+  </tr>
+  </thead>
+  <tbody id="netinfo_ps">
+    {% if netinfo_two %}
+    {% for net in netinfo_two %}
+    <tr>
+      <td>{{net.0}}</td>
+      <td>{{net.6}}</td>
+      <td>{{net.5}}</td>
+      <td>{{net.3.0}}</td>
+      <td>{{net.3.1}}</td>
+      <td>{{net.4.0}}</td>
+      <td>{{net.4.1}}</td>
+      <td>{{net.2}}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <script>alert("没有权限无法得到网络连接信息")</script>
+    {% endif %}
+  </tbody>
+</table>
+
+
+<script type="text/javascript">
+  $(function(){
+    $('#button').click(function() {
+    $.ajax({
+      url: '/netinfo/',
+      type: 'GET',
+      dataType: 'json',
+      success:function(data){
+        $('#netinfo').html('');
+        json=eval('('+data+')')
+        $('#netinfo_len').html("当前网卡数量:"+json[1])
+        $('#netinfo_ps_len').html("当前网络连接数量:"+json[3])
+        for(var i in json[0]){
+          $('#netinfo').append('<tr>'+'<td>'+i+'</td>'+'<td>'+json[0][i][0]+'</td>'+'<td>'+json[0][i][1]+'</td>'+'<td>'+json[0][i][2]+'</td>'+'<td>'+json[0][i][3]+'</td>'+'</tr>');
+        }
+        $('#netinfo_ps').html('');
+        for(var i=1;i<=json[2].length-1;i++)
+        {
+          // alert(json[2][i]);
+          $('#netinfo_ps').append('<tr>'+'<td>'+json[2][i][0]+'</td>'+'<td>'+json[2][i][6]+'</td>'+'<td>'+json[2][i][5]+'</td>'+'<td>'+json[2][i][3][0]+'</td>'+'<td>'+json[2][i][3][1]+'</td>'+'<td>'+json[2][i][4][0]+'</td>'+'<td>'+json[2][i][4][1]+'</td>'+'<td>'+json[2][i][2]+'</td>'+'</tr>');
+        }
+
+      }
+    });
+  })
+  })
+</script>
+
 
 {% endblock %}

@@ -33,8 +33,11 @@ option = {
     data: ylabel
   },
   yAxis: {
-    boundaryGap: [0, '50%'],
-    type: 'value'
+  //   boundaryGap: [0, '50%'],
+  //   type: 'value'
+  },
+  grid:{
+    x:40,
   },
   series: [{
     name: 'info',
@@ -52,7 +55,9 @@ option = {
 if (option && typeof option === "object") {
   myChart.setOption(option, true);
   // myChart.setOption({xAxis: {data:["CPU"]}});
+  myChart.setOption({yAxis: {axisLabel:{formatter: '{value} %'},type: 'value'}});
   myChart2.setOption(option, true);
+  myChart2.setOption({yAxis: {axisLabel: {formatter: '{value} %'},type: 'value'}});
   // myChart2.setOption({xAxis: {data:["MEMORY"]}});
   myChart3.setOption(option, true);
   // myChart3.setOption({xAxis: {data:["CPU"]}});
