@@ -10,4 +10,5 @@ urlpatterns=[
     url(r'^userinfo/',views.userinfo,name='userinfo'),
     url(r'^psinfo/',views.psinfo,name='psinfo'),
     url(r'^netinfo/',views.netinfo,name='netinfo'),
+    url(r'^captcha/',views.captcha,name="captcha"),
 ]

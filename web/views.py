@@ -5,7 +5,9 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
 from django.contrib.auth import login,logout,authenticate
 from forms import LoginForm
-import psutil,json
+import psutil,json,os,random,string,cStringIO
+from PIL import ImageFont,ImageDraw,Image
+from Monito.settings import BASE_DIR
 from django.core import serializers
 from models import Dashboad
 import datetime
@@ -105,9 +107,21 @@ def test2(request):
         if Dashboad.objects.count() >=100:
             endid = Dashboad.objects.order_by("-id").values_list("id")[0][0]
             Dashboad.objects.filter(id__lt=endid - 100).delete()
-        # data=Dashboad.objects.all().values_list("memory")
         data=serializers.serialize("json",Dashboad.objects.all(),fields=['cpu','memory'],use_natural_foreign_keys=True, use_natural_primary_keys=True)
-        # return HttpResponse(data)
         return JsonResponse(data=data,safe=False,content_type="application/json")
     else:
         return HttpResponse("")
+
+def captcha(request):
+    image=Image.new('RGB',(147,49),color=(255,255,255))
+    # font_file=os.path.join(BASE_DIR,'static/fonts/Trojan.ttf')
+    # font=ImageFont.truetype(font_file,47)
+    draw=ImageDraw.Draw(image)
+    rand_str=''.join(random.sample(string.letters+string.digits,4))
+    draw.text((100,30),rand_str,fill=(0,0,0))
+    del draw
+    # request.session['catpcha']=rand_str.lower()
+    buf=cStringIO.StringIO()
+    image.save(buf,'jpeg')
+    return HttpResponse(buf.getvalue(),'image/jpeg')
+
