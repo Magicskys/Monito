@@ -11,26 +11,26 @@
 </div>
 
 <table class="table table-hover">
-  <thead>
+    <thead>
     <tr>
-      <td>状态</td>
-      <td>用户</td>
-      <td>PID</td>
-      <td>程序名称</td>
-      <td>绝对地址</td>
+        <td>状态</td>
+        <td>用户</td>
+        <td>PID</td>
+        <td>程序名称</td>
+        <td>绝对地址</td>
     </tr>
-  </thead>
-  <tbody id="psinfo">
+    </thead>
+    <tbody id="psinfo">
     {% for ps in psinfo %}
     <tr>
-      <td>{{ps.status}}</td>
-      <td>{{ps.username}}</td>
-      <td>{{ps.pid}}</td>
-      <td>{{ps.name}}</td>
-      <td>{{ps.exe}}</td>
+        <td>{{ps.status}}</td>
+        <td>{{ps.username}}</td>
+        <td>{{ps.pid}}</td>
+        <td>{{ps.name}}</td>
+        <td>{{ps.exe}}</td>
     </tr>
     {% endfor %}
-  </tbody>
+    </tbody>
 </table>
 
 
@@ -45,12 +45,34 @@
           json=eval('('+data+')');
           $("#psinfo").html('');
           for (var i=0;i<json.length-1;i++){
-            $('#psinfo').append('<tr">'+'<td>'+json[i].status+'</td>'+'<td>'+json[i].username+'</td>'+'<td>'+json[i].pid+'</td>'+'<td>'+json[i].name+'</td>'+'<td>'+json[i].exe+'</td>'+'</tr>')
+            $('#psinfo').append('<tr>'+'<td>'+json[i].status+'</td>'+'<td>'+json[i].username+'</td>'+'<td>'+json[i].pid+'</td>'+'<td>'+json[i].name+'</td>'+'<td>'+json[i].exe+'</td>'+'</tr>')
           }
         }
       })
     });
   })
+
+
+  $(function(){
+    $("#kill_button").click(function(event) {
+      $.ajax({
+        url: '/pskill/',
+        type: 'GET',
+        dataType: 'json',
+        data: {pid: $(".focus td:eq(2)").text()},
+        success:function(data){
+          alert(data);
+        },
+      });
+    });
+  })
+
+   $(document).ready(function () {
+                $("#psinfo>tr").on("click", function () {
+                    $(this).parent().find("tr.focus").toggleClass("focus");
+                    $(this).toggleClass("focus");
+                });
+            });
 </script>
 
 {% endblock %}

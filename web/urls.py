@@ -11,4 +11,5 @@ urlpatterns=[
     url(r'^psinfo/',views.psinfo,name='psinfo'),
     url(r'^netinfo/',views.netinfo,name='netinfo'),
     url(r'^captcha/',views.captcha,name="captcha"),
+    url(r'^pskill/',views.pskill,name="pskill"),
 ]

@@ -18,8 +18,12 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}">
-    </script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+    <style type="text/css">
+    tr.focus{
+        background-color:#eee;
+    }
+    </style>
 </head>
 
 <body>
@@ -121,6 +125,8 @@
                     $(this).find("span").toggleClass("glyphicon-chevron-up");
                 });
             });
+
+
             </script>
 </body>
 
