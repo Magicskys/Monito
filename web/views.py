@@ -40,6 +40,9 @@ def userinfo(request):
 @audit_login
 def psinfo(request):
     if request.is_ajax():
+        if request.GET['pid']:
+            pid_info=psutil.Process(int(request.GET['pid'])).as_dict()
+            return JsonResponse(data=json.dumps(pid_info),safe=False,content_type='application/json')
         psinfo = [i.as_dict(attrs=['status', 'username', 'pid', 'name', 'exe']) for i in psutil.process_iter()]
         return JsonResponse(data=json.dumps(psinfo),safe=False,content_type='application/json')
     else:

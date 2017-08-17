@@ -34,6 +34,25 @@
 </table>
 
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel" style="text-align:center">
+					进程描述
+				</h4>
+			</div>
+			<div class="modal-body">
+                <table id="modal-body-table" class="table">
+                </table>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+
 <script type="text/javascript">
   $(function() {
     $("#button").click(function() {
@@ -73,6 +92,31 @@
                     $(this).toggleClass("focus");
                 });
             });
+
+   $('td').on('dblclick',function(){
+        $.ajax({
+        url: '/psinfo/',
+        type: 'GET',
+        dataType: 'json',
+        data: {pid: $(".focus td:eq(2)").text()},
+        success:function(data){
+        data=JSON.parse(data)
+        $("#modal-body-table").html('');
+        var data_list=['用户','终端','进程名','进程的bin路径','进程的工作目录绝对路径','进程状态','进程创建时间','进程uid信息','进程的gid信息','进程的cpu时间信息','进程内存利用率','程内存rss,vms信息','进程的IO信息,包括读写IO数字及参数','进程开启的线程数','返回进程列表']
+        var data_args=['username','terminal','name','exe','cwd','status','create_time','uids','gids','cpu_times','memory_percent','memory_info','io_counters','num_threads','connectios']
+        for (var i=0;i<data_list.length-1;i++){
+          $('#modal-body-table').append(
+                '<tr>'+'<td>'+data_list[i]+'</td>'+'<td>'+data[data_args[i]]+'</td>'+'</tr>'
+            )}
+        },
+      });
+$('#myModal').modal('show');
+  });
+
+$('.focus').popover('show');
+$('.focus').popover('hide');
+$('.focus').popover('destroy')
 </script>
+
 
 {% endblock %}
